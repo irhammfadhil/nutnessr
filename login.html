@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutnessr - Login</title>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+</head>
+<body>
+    <article>
+        <h1>Login Nutnessr</h1>
+        <form onsubmit="return checkLogin(event)">
+            <p>
+                <label>Username</label>
+                <input type="text" id="username" placeholder="Masukkan Username" required>
+            </p>
+            <p>
+                <label>Password</label>
+                <input type="password" id="password" placeholder="Masukkan Password" required>
+            </p>
+            <p><button type="submit">Login</button></p>
+        </form>
+    </article>
+
+    <script>
+        function checkLogin(event) {
+            event.preventDefault(); // Mencegah reload halaman
+            
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+
+            // Admin Login
+            if (username === "admin" && password === "admin123") {
+                localStorage.setItem("role", "admin"); // Simpan role admin
+                window.location.href = "admin-home.html"; // Redirect ke halaman admin
+            } 
+            // User Login
+            else if (username === "user" && password === "user123") {
+                localStorage.setItem("role", "user"); // Simpan role user
+                window.location.href = "home.html"; // Redirect ke halaman user
+            } 
+            else {
+                alert("Login gagal! Username atau password salah.");
+            }
+        }
+    </script>
+</body>
+</html>
+

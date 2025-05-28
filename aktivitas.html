@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jadwal Aktivitas</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 700px; margin: auto; }
+        .location { font-size: 18px; font-weight: bold; margin-bottom: 10px; }
+        .date-scroll { display: flex; overflow-x: auto; padding: 10px 0; }
+        .date-item { margin-right: 10px; padding: 10px; background: lightgray; border-radius: 5px; cursor: pointer; text-align: center; min-width: 80px; }
+        .active { background: orange; color: white; }
+        .activity-list { margin-top: 20px; }
+        .activity-item { padding: 15px; border: 1px solid #ccc; margin-bottom: 10px; border-radius: 10px; background: #f9f9f9; }
+        .activity-title { font-weight: bold; font-size: 16px; }
+        .activity-time { color: gray; margin: 5px 0; }
+        .slots { font-weight: bold; color: red; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <p class="location">Lokasi: <span id="user-location">Mendeteksi...</span></p>
+        <div class="date-scroll" id="date-scroll"></div>
+        <div class="activity-list" id="activity-list"></div>
+    </div>
+
+    <script>
+        const activities = {
+            '2025-03-18': [
+                { name: 'Tennis Beginner Class', time: '20:00 - 22:00 WIB', location: 'Lapangan Tenis ITS', slots: 5 },
+                { name: 'Yoga Session', time: '18:00 - 19:30 WIB', location: 'Cattleya Yoga Studio', slots: 2 }
+            ],
+            '2025-03-19': [
+                { name: 'Swimming Class', time: '10:00 - 11:30 WIB', location: 'Kolam Renang Surabaya', slots: 3 },
+                { name: 'Cycling Event', time: '06:00 - 08:00 WIB', location: 'Bundaran HI', slots: 10 }
+            ]
+        };
+
+        const dateScroll = document.getElementById("date-scroll");
+        const today = new Date();
+        for (let i = 0; i < 7; i++) {
+            let date = new Date();
+            date.setDate(today.getDate() + i);
+            let dateStr = date.toISOString().split('T')[0];
+            let btn = document.createElement("div");
+            btn.className = "date-item";
+            btn.innerHTML = `<b>${date.toDateString().slice(0, 3)}</b><br>${date.toDateString().slice(4, 10)}`;
+            btn.onclick = () => loadActivities(dateStr, btn);
+            dateScroll.appendChild(btn);
+            if (i === 0) btn.classList.add("active");
+        }
+
+        function loadActivities(date, btn) {
+            document.querySelectorAll('.date-item').forEach(el => el.classList.remove("active"));
+            btn.classList.add("active");
+            let activityList = document.getElementById("activity-list");
+            activityList.innerHTML = "";
+            if (activities[date]) {
+                activities[date].forEach(activity => {
+                    let div = document.createElement("div");
+                    div.className = "activity-item";
+                    div.innerHTML = `<div class="activity-title">${activity.name}</div>
+                                     <div class="activity-time">${activity.time} • ${activity.location}</div>
+                                     <div class="slots">${activity.slots} Slots remaining</div>`;
+                    activityList.appendChild(div);
+                });
+            } else {
+                activityList.innerHTML = "<p>Tidak ada aktivitas.</p>";
+            }
+        }
+
+        loadActivities(Object.keys(activities)[0], document.querySelector(".date-item"));
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.coords.latitude}&lon=${position.coords.longitude}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById("user-location").innerText = data.address.city || data.address.state || "Lokasi tidak ditemukan";
+                    });
+            }, () => {
+                document.getElementById("user-location").innerText = "Lokasi tidak dapat diakses";
+            });
+        }
+    </script>
+</body>
+</html>
+

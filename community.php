@@ -1,0 +1,108 @@
+<?php
+// community.php
+?>
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Community Health</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .event-card, .product-card {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .event-card img, .product-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+        .event-card .card-body, .product-card .card-body {
+            padding: 15px;
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+<div class="container mt-4">
+    <h2 class="text-center">Community Health</h2>
+
+    <!-- Tabs Navigasi -->
+    <ul class="nav nav-pills nav-justified mt-3">
+        <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#events">Jadwal Aktivitas & Event</a></li>
+        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#nutrition">Kesehatan Gizi</a></li>
+    </ul>
+
+    <div class="tab-content mt-4">
+        <!-- Events Section -->
+        <div class="tab-pane fade show active" id="events">
+            <h5>Jadwal Aktivitas & Event</h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card event-card">
+                        <img src="https://www.yesdok.com/visual/slideshow/lolp-article-1581478168.jpg?w=1200" alt="Event">
+                        <div class="card-body">
+                            <h6 class="card-title">Yoga & Meditasi</h6>
+                            <p class="card-text">Sabtu, 25 Maret 2025 - 07:00 AM</p>
+                            <button class="btn btn-primary btn-sm">Join</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card event-card">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4RuMvWQ5ncl1Bb5XBFeNrSxoDFBhdVHUxvw&s" alt="Event">
+                        <div class="card-body">
+                            <h6 class="card-title">Lari Sehat 5K</h6>
+                            <p class="card-text">Minggu, 26 Maret 2025 - 06:30 AM</p>
+                            <button class="btn btn-primary btn-sm">Join</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nutrition Section -->
+        <div class="tab-pane fade" id="nutrition">
+            <h5>Produk Suplemen & Herbal</h5>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card product-card">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQ5Mf5DuwCrEqUXJdBBCggWmaxMTyngXm74A&s" alt="Jamu">
+                        <div class="card-body">
+                            <h6 class="card-title">Jamu Kunyit Asam</h6>
+                            <p class="card-text">Rp 25.000</p>
+                            <button class="btn btn-success btn-sm">Beli</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card product-card">
+                        <img src="https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full//805/sidomuncul_sidomuncul-vitamin-c-1000-mg_full02.jpg" alt="Suplemen">
+                        <div class="card-body">
+                            <h6 class="card-title">Vitamin C 1000mg</h6>
+                            <p class="card-text">Rp 50.000</p>
+                            <button class="btn btn-success btn-sm">Beli</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card product-card">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRq9Uu_HdJ-4bV9rOyJI4G0HzHCOkKMghrojQ&s" alt="Obat Herbal">
+                        <div class="card-body">
+                            <h6 class="card-title">Obat Herbal Pegal Linu</h6>
+                            <p class="card-text">Rp 30.000</p>
+                            <button class="btn btn-success btn-sm">Beli</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

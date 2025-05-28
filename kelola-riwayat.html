@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Riwayat</title>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+</head>
+<body onload="checkAdmin()">
+    <header>
+        <h1>Kelola Riwayat Pengguna</h1>
+    <nav>
+        <a href="admin-home.html">Kembali</a>
+    </nav>
+    </header>
+    <!-- Riwayat Transaksi -->
+    <h2>Riwayat Transaksi</h2>
+    <table>
+        <tr>
+            <th>ID Transaksi</th>
+            <th>ID User</th>
+            <th>Nama</th>
+            <th>Item</th>
+            <th>Total Harga</th>
+            <th>Status</th>
+            <th>Aksi</th>
+        </tr>
+        <tr>
+            <td>TRX001</td>
+            <td>001</td>
+            <td>Budi</td>
+            <td>Suplemen Protein</td>
+            <td>Rp 250.000</td>
+            <td>Berhasil</td>
+            <td><button>Detail</button></td>
+        </tr>
+        <tr>
+            <td>TRX002</td>
+            <td>002</td>
+            <td>Siti</td>
+            <td>Jamu Herbal</td>
+            <td>Rp 150.000</td>
+            <td>Pending</td>
+            <td><button>Detail</button></td>
+        </tr>
+    </table>
+
+    <!-- Riwayat Penyewaan -->
+    <h2>Riwayat Penyewaan</h2>
+    <table>
+        <tr>
+            <th>ID Penyewaan</th>
+            <th>ID User</th>
+            <th>Nama</th>
+            <th>Item Disewa</th>
+            <th>Tanggal Sewa</th>
+            <th>Tanggal Kembali</th>
+            <th>Status</th>
+            <th>Aksi</th>
+        </tr>
+        <tr>
+            <td>SEWA001</td>
+            <td>003</td>
+            <td>Andi</td>
+            <td>Matras Yoga</td>
+            <td>2025-03-15</td>
+            <td>2025-03-20</td>
+            <td>Selesai</td>
+            <td><button>Detail</button></td>
+        </tr>
+        <tr>
+            <td>SEWA002</td>
+            <td>004</td>
+            <td>Dewi</td>
+            <td>Sepeda Statis</td>
+            <td>2025-03-18</td>
+            <td>2025-03-25</td>
+            <td>Dipinjam</td>
+            <td><button>Detail</button></td>
+        </tr>
+    </table>
+
+    <script>
+        function checkAdmin() {
+            var role = localStorage.getItem("role");
+            if (role !== "admin") {
+                alert("Akses ditolak! Anda bukan admin.");
+                window.location.href = "login.html";
+            }
+        }
+    </script>
+</body>
+</html>
+

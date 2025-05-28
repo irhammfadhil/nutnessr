@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Pengguna</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        .profile-container {
+            width: 60%;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .profile-header {
+            text-align: center;
+        }
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .profile-info {
+            margin-top: 15px;
+        }
+        .profile-section {
+            margin-top: 20px;
+        }
+        .profile-section h3 {
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 5px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px;
+            margin: 5px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-pic-container">
+                <img src="default-avatar.png" alt="Foto Profil" class="profile-pic" id="profileImage">
+                <input type="file" id="uploadPhoto" accept="image/*" style="display:none;">
+                <button class="edit-photo" onclick="document.getElementById('uploadPhoto').click();">📷</button>
+		<button class="delete-photo" onclick="removePhoto()">🗑</button>
+            </div>
+            <h2>Nama Pengguna</h2>
+            <p>hello@example.com</p>
+        </div>
+        
+        <div class="profile-section">
+            <h3>Biodata</h3>
+            <input type="text" placeholder="Nama Lengkap" value="Nama Pengguna">
+            <input type="number" placeholder="Usia" value="25">
+            <input type="text" placeholder="Jenis Kelamin" value="Laki-laki">
+        </div>        
+
+        <div class="profile-section">
+            <h3>Riwayat Transaksi & Penyewaan</h3>
+            <a href="history.html" class="btn">Lihat Riwayat</a>
+        </div>
+
+        <div class="profile-section">
+            <h3>Pengaturan Akun</h3>
+            <a href="ubah_username.html" class="btn">Ganti Username</a>
+            <a href="ubah_sandi.html" class="btn">Ganti Kata Sandi</a>
+        </div>
+        
+        <div class="profile-section">
+            <h3>Keamanan</h3>
+            <button class="btn" style="background-color: red;" onclick="confirmDelete()">Hapus Akun</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("uploadPhoto").addEventListener("change", function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById("profileImage").src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+	function removePhoto() {
+            document.getElementById("profileImage").src = "default-avatar.png";
+        }
+
+        function confirmDelete() {
+            if (confirm("Apakah Anda yakin ingin menghapus akun ini?")) {
+                alert("Akun Anda telah dihapus.");
+            }
+        }
+    </script>
+</body>
+</html>
+
