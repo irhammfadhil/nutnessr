@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($row['role'] === 'admin') {
                 header("Location: admin-home.php");
             } elseif ($row['role'] === 'admin_mitra') {
-                header("Location: admin-penyewaan.php");
+                header("Location: dashboard_mitra.php");
             } else {
                 header("Location: home.php");
             }

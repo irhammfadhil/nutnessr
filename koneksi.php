@@ -1,7 +1,7 @@
 <?php
 $host = "localhost";
-$user = "nutnessr";
-$pass = "6g4390i1"; // atau sesuai dengan password MySQL Anda
+$user = "root";
+$pass = ""; // atau sesuai dengan password MySQL Anda
 $db   = "nutnessr"; // ganti dengan nama database Anda
 
 $conn = new mysqli($host, $user, $pass, $db);

@@ -14,41 +14,43 @@ if ($role !== 'admin' && $role !== 'admin_mitra') {
     exit;
 }
 
-// Dummy data item per kategori
-$items = [
-    'alat' => [
-        ["id" => "raket_tenis", "name" => "Raket Tenis", "price" => "Rp 50.000", "quota" => 2],
-        ["id" => "sepeda_gunung", "name" => "Sepeda Gunung", "price" => "Rp 80.000", "quota" => 3]
-    ],
-    'tempat olahraga' => [
-        ["id" => "lap_futsal", "name" => "Lapangan Futsal", "price" => "Rp 200.000", "quota" => 1]
-    ],
-    'coaching' => [
-        ["id" => "coach_basket", "name" => "Coaching Basket", "price" => "Rp 150.000", "quota" => 1]
-    ],
-    'bundling' => [
-        ["id" => "paket_kombo", "name" => "Bundling Kombo", "price" => "Rp 250.000", "quota" => 1]
-    ]
-];
+$items = [];
+
+$sql = "SELECT id, item_name, item_price, item_quota, item_category FROM items";
+$stmt = $conn->prepare($sql);
+$stmt->execute();
+$result = $stmt->get_result();
+
+while ($row = $result->fetch_assoc()) {
+    $category = $row['item_category'];
+
+    if (!isset($items[$category])) {
+        $items[$category] = [];
+    }
+
+    $items[$category][] = [
+        'id' => $row['id'],
+        'name' => $row['item_name'],
+        'price' => $row['item_price'],
+        'quota' => (int)$row['item_quota']
+    ];
+}
+
 
 $message = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $item_id = $_POST['item_id'];
-    $item_name = $_POST['item_name'];
-    $price = $_POST['price'];
-    $quota = $_POST['quota'];
     $tanggal = $_POST['tanggal'];
-    $kategori = $_POST['kategori'];
     $user_id = $_SESSION['user_id'];
     $created_at = date("Y-m-d H:i:s");
 
-    $stmt = $conn->prepare("INSERT INTO penyewaan (user_id, tanggal, item_id, item_name, kategori, price, quota, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO penyewaan (user_id, tanggal, item_id, created_at) VALUES (?, ?, ?, ?)");
 
     if ($stmt === false) {
         die("Prepare failed: " . $conn->error);
     }
 
-    $stmt->bind_param("isissiis", $user_id, $tanggal, $item_id, $item_name, $kategori, $price, $quota, $created_at);
+    $stmt->bind_param("isis", $user_id, $tanggal, $item_id, $created_at);
     if ($stmt->execute()) {
         $message = "<p style='color:green'>✅ Data berhasil ditambahkan.</p>";
     } else {
@@ -102,21 +104,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </select>
         </div>
 
-        <div class="form-control">
-            <label>Nama Item:</label>
-            <input type="text" name="item_name" required><br>
-        </div>
-
-        <div class="form-control">
-            <label>Harga:</label>
-            <input type="number" name="price" required><br>
-        </div>
-
-        <div class="form-control">
-            <label>Kuota:</label>
-            <input type="number" name="quota" required><br>
-        </div>
-
         <button type="submit">Tambah Penyewaan</button>
     </form>
 
@@ -130,27 +117,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <th>Item</th>
                 <th>Tanggal</th>
                 <th>Harga</th>
-                <th>Kuota</th>
                 <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
             <?php
             if ($conn) {
-                $result = $conn->query("SELECT * FROM penyewaan ORDER BY tanggal ASC");
+                $result = $conn->query("SELECT p.id as id_penyewaan, p.user_id as user_id, i.item_name as item_name, p.item_id as item_id, p.tanggal as tanggal, i.item_price as price
+                 FROM penyewaan as p join items as i on i.id = p.item_id ORDER BY p.tanggal ASC");
                 if ($result) {
                     while ($row = $result->fetch_assoc()):   
             ?>
                     <tr>
-                        <td><?= $row['id'] ?></td>
+                        <td><?= $row['id_penyewaan'] ?></td>
                         <td><?= $row['user_id'] ?></td>
                         <td><?= $row['item_name'] ?> (<?= $row['item_id'] ?>)</td>
                         <td><?= $row['tanggal'] ?></td>
                         <td><?= $row['price'] ?></td>
-                        <td><?= $row['quota'] ?></td>
                         <td>
-                            <a href="edit-penyewaan.php?id=<?= $row['id'] ?>">Edit</a> |
-                            <a href="delete-penyewaan.php?id=<?= $row['id'] ?>" onclick="return confirm('Yakin ingin menghapus?')">Hapus</a>
+                            <a href="edit-penyewaan.php?id=<?= $row['id_penyewaan'] ?>">Edit</a> |
+                            <a href="delete-penyewaan.php?id=<?= $row['id_penyewaan'] ?>" onclick="return confirm('Yakin ingin menghapus?')">Hapus</a>
                         </td>
                     </tr>
             <?php

@@ -1,8 +1,8 @@
 <?php
 
 $db_host = "localhost";
-$db_user = "nutnessr";
-$db_pass = "6g4390i1";
+$db_user = "root";
+$db_pass = "";
 $db_name = "nutnessr";
 
 function generateRandomString($length = 10) {

@@ -2,8 +2,6 @@
 require 'koneksi.php';
 session_start();
 
-$userId = $_SESSION['user_id'];
-
 $categories = [];
 $sql = "SELECT DISTINCT item_category FROM items";
 $result = $conn->query($sql);
@@ -14,42 +12,23 @@ if ($result && $result->num_rows > 0) {
     }
 }
 
-$sql = "SELECT * FROM items";
-$result = $conn->query($sql);
-
-// Fetch all items first to reuse them for each date
-$items = [];
-
-if ($result && $result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $price = (int) $row['item_price'];
-        $durasi = [
-            1 => $price * 1,
-            2 => $price * 2,
-            3 => $price * 3
-        ];
-
-        $items[] = [
-            "id" => $row['id'],
-            "name" => $row['item_name'],
-            "price" => $price,
-            "img" => 'https://via.placeholder.com/80',
-            "durasi" => $durasi
-        ];
-    }
-}
-
-$rentals = [];
-
-// Loop for next 7 days
-for ($i = 0; $i < 7; $i++) {
-    // Get the date string for day $i
-    $dateKey = date('Y-m-d', strtotime("+$i days"));
-
-    // Assign all items to that date
-    $rentals[$dateKey] = $items;
-}
-
+// Simulasi data penyewaan (bisa diganti dengan query database)
+$rentals = [
+    date('Y-m-d') => [
+        [
+            "name" => "Raket Tenis",
+            "price" => 50000,
+            "img" => "https://img.id.my-best.com/product_images/7c15fa8963962590c88f9e51fecfdfe6.png",
+            "durasi" => [1 => 50000, 2 => 90000, 3 => 130000]
+        ],
+        [
+            "name" => "Lapangan Futsal",
+            "price" => 200000,
+            "img" => "https://via.placeholder.com/80",
+            "durasi" => [1 => 200000, 2 => 380000, 3 => 540000]
+        ]
+    ]
+];
 ?>
 
 <!DOCTYPE html>
@@ -186,7 +165,7 @@ for ($i = 0; $i < 7; $i++) {
             <p>Konfirmasi penyewaan:</p>
             <p id="confirm-text"></p>
             <label for="durasi">Durasi (hari):</label>
-            <select id="durasi" onchange="updatePrice(selectedRental.prices)">
+            <select id="durasi" onchange="updatePrice()">
                 <option value="1">1 hari</option>
                 <option value="2">2 hari</option>
                 <option value="3">3 hari</option>
@@ -240,33 +219,16 @@ for ($i = 0; $i < 7; $i++) {
                     let div = document.createElement("div");
                     div.className = "rental-item";
                     div.innerHTML = `<img src="${rental.img}" alt="${rental.name}"><div><b>${rental.name}</b> - Rp ${rental.price.toLocaleString()}</div>`;
-
-                    // Add rental ID as a data attribute (optional but useful)
-                    div.dataset.rentalId = rental.id;
-
-                    // Pass the id along with other data to confirmBooking
-                    div.onclick = () => {
-                        console.log('ID:', rental.id);
-                        console.log('Name:', rental.name);
-                        console.log('Price:', rental.price);
-                        console.log('Date:', date);
-                        confirmBooking(rental.id, rental.name, rental.price, date);
-                    };
-
-
+                    div.onclick = () => confirmBooking(rental.name, rental.durasi, date);
                     rentalList.appendChild(div);
                 });
-
             } else {
                 rentalList.innerHTML = "<p>Tidak ada penyewaan tersedia.</p>";
             }
         }
 
-        function confirmBooking(id, name, durasiObj, date) {
-            const userId = <?= json_encode($userId); ?>;
+        function confirmBooking(name, durasiObj, date) {
             selectedRental = {
-                id: id,
-                user_id: userId,
                 name: name,
                 date: date,
                 durasi: 1,
@@ -274,49 +236,20 @@ for ($i = 0; $i < 7; $i++) {
             };
             document.getElementById("confirm-text").innerText = `${name} pada ${date}`;
             document.getElementById("durasi").value = "1";
-            updatePrice(selectedRental.prices);
+            updatePrice();
             document.getElementById("confirm-box").style.display = "block";
         }
 
-        function updatePrice(prices) {
+        function updatePrice() {
             const durasi = document.getElementById("durasi").value;
             selectedRental.durasi = parseInt(durasi);
-            //const harga = selectedRental.prices[durasi];
-            pricesPerItem = prices;
-            document.getElementById("price-text").innerText = `Harga total: Rp ` + prices;
-            selectedRental.prices = selectedRental.price * selectedRental.durasi;
+            const harga = selectedRental.prices[durasi];
+            document.getElementById("price-text").innerText = `Harga total: Rp ${harga.toLocaleString()}`;
         }
 
         function confirmRental() {
-            // Prepare data to send
-            const dataToSend = {
-                user_id: selectedRental.user_id,
-                tanggal: selectedRental.date,
-                durasi: selectedRental.durasi,
-                item_id: selectedRental.id
-            };
-
-            fetch('save_rental.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'  // sending JSON
-                },
-                body: JSON.stringify(dataToSend)
-            })
-                .then(response => response.json())
-                .then(result => {
-                    console.log('Server response:', result);
-                    if (result.success) {
-                        alert(`Penyewaan ${selectedRental.name} selama ${selectedRental.durasi} hari berhasil disimpan!`);
-                    } else {
-                        alert('Gagal menyimpan data penyewaan.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Terjadi kesalahan saat menyimpan data.');
-                });
-
+            alert(`Penyewaan ${selectedRental.name} selama ${selectedRental.durasi} hari berhasil disimpan!`);
+            // Di sini bisa tambahkan fetch() ke PHP untuk simpan ke database
             document.getElementById("confirm-box").style.display = "none";
         }
 
